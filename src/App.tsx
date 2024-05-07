@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import NewGame from './components/NewGame';
-import Game from './components/Game';
+import GameContainer from './components/GameContainer';
 import webSocket from './websocket/websocket';
 
 
@@ -21,7 +21,7 @@ function App() {
 		<BrowserRouter>
 			<Routes>
 				<Route path="/" element={<NewGame webSocket={webSocket}/>} />
-				<Route path="/:gameId" element={<Game webSocket={webSocket}/>} />
+				<Route path="/:gameId" element={<GameContainer webSocket={webSocket}/>} />
 			</Routes>
 		</BrowserRouter>
 	);

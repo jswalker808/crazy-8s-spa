@@ -12,21 +12,14 @@ export interface Player {
     id: string
     name: string
     points: number
-}
-
-export interface ActivePlayer extends Player {
     hand: Card[]
-}
-
-export interface Opponent extends Player {
-    hand: number
 }
 
 export interface GameState {
     gameId: string
     maxPoints: number
     player: Player
-    opponents: Opponent[]
+    opponents: Player[]
     deck: Card[]
     discardPile: Card[]
     currentTurn: string

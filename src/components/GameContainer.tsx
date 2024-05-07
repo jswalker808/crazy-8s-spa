@@ -3,7 +3,7 @@ import Lobby from "./Lobby";
 import { GameState } from "../models/models";
 import { useLocation } from "react-router-dom";
 
-export default function Game({ webSocket }: { webSocket: WebSocket }) {
+export default function GameContainer({ webSocket }: { webSocket: WebSocket }) {
 
     const [gameState, setGameState] = useState<GameState>(useLocation().state);
 

@@ -1,18 +1,20 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { WebSocketContext } from "../contexts";
+import { GameState } from "../models/models";
 
-export default function NewGame({ webSocket }: { webSocket: WebSocket }) {
+export default function NewGame({ gameState }: { gameState: GameState | null }) {
 
+    const webSocket = useContext(WebSocketContext)
     const [playername, setPlayerName] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
-        webSocket.onmessage = (event) => {
-            const gameState = JSON.parse(event.data);
+        if (gameState) {
             navigate(`/${gameState.gameId}`, { state: gameState });
-        };
+        }
         return () => {};
-	}, [webSocket, navigate]);
+	}, [gameState, navigate]);
 
     function handleCreateNewGame(e: React.FormEvent) {
 		e.preventDefault();
@@ -22,7 +24,7 @@ export default function NewGame({ webSocket }: { webSocket: WebSocket }) {
 				playerName: playername
 			}
 		};
-		webSocket.send(JSON.stringify(createGameRequest));
+		webSocket?.send(JSON.stringify(createGameRequest));
 	}
 
 	function handleGameOwnerNameChange(e: React.FormEvent) {

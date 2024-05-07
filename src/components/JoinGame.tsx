@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function JoinGame({ webSocket }: { webSocket: WebSocket }) {
+export default function JoinGame() {
 
     const [playername, setPlayerName] = useState("");
 

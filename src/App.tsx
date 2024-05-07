@@ -1,28 +1,48 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import NewGame from './components/NewGame';
 import GameContainer from './components/GameContainer';
-import webSocket from './websocket/websocket';
-
+import { GameState } from './models/models';
+import { WebSocketContext } from './contexts';
 
 function App() {
+
+	const [gameState, setGameState] = useState<GameState | null>(null);
+	const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
 	
 	useEffect(() => {
-		webSocket.onopen = () => {
-			console.log("Web socket connection opened");
+		const ws = new WebSocket(process.env.REACT_APP_API_GATEWAY_ENDPOINT_URL as string);
+		ws.onopen = () => {
+			console.log('WebSocket connected');
 		};
-		webSocket.onclose = () => {
-			console.log("Closing web socket connection");
-		}
+		ws.onmessage = (event) => {
+			const response = JSON.parse(event.data);
+			console.log(response);
+			setGameState(response);
+		};
+		ws.onerror = (error) => {
+			console.error('WebSocket error:', error);
+		};
+		ws.onclose = () => {
+			console.log('WebSocket closed');
+		};
+
+		setWebSocket(ws);
+
+		return () => {
+			ws.close();
+		};
 	}, []);
 
 	return (
 		<BrowserRouter>
-			<Routes>
-				<Route path="/" element={<NewGame webSocket={webSocket}/>} />
-				<Route path="/:gameId" element={<GameContainer webSocket={webSocket}/>} />
-			</Routes>
+			<WebSocketContext.Provider value={webSocket}>
+				<Routes>
+					<Route path="/" element={<NewGame gameState={gameState}/>} />
+					<Route path="/:gameId" element={<GameContainer gameState={gameState}/>} />
+				</Routes>
+			</WebSocketContext.Provider>
 		</BrowserRouter>
 	);
 }

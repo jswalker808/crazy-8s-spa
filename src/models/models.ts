@@ -1,4 +1,4 @@
-enum GameStatus {
+export enum GameStatus {
     Pending = "pending",
     InProgress = "in_progress"
 }

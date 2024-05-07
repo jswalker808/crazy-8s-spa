@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Lobby from "./Lobby";
 import { GameState } from "../models/models";
 import { useLocation } from "react-router-dom";
+import JoinGame from "./JoinGame";
 
 export default function GameContainer({ webSocket }: { webSocket: WebSocket }) {
 
@@ -18,7 +19,7 @@ export default function GameContainer({ webSocket }: { webSocket: WebSocket }) {
 
     return (
         <>
-            <Lobby players={[gameState.player, ...gameState.opponents]}/>
+            {gameState ? <Lobby players={[gameState.player, ...gameState.opponents]}/> : <JoinGame webSocket={webSocket}/>}
         </>
     )
 }

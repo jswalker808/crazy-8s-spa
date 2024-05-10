@@ -1,12 +1,22 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { WebSocketContext } from "../contexts";
 
-export default function JoinGame() {
+export default function JoinGame({ gameId }: { gameId: string }) {
 
     const [playername, setPlayerName] = useState("");
+    const webSocket = useContext(WebSocketContext);
 
     function handleJoinGame(e: React.FormEvent) {
 		e.preventDefault();
 		console.log(`Joining game, player: ${playername}`);
+        const joinGameRequest = {
+			action: "join_game",
+			gameRequest: {
+				playerName: playername,
+                gameId: gameId
+			}
+		};
+		webSocket?.send(JSON.stringify(joinGameRequest));
 	}
 
 	function handlePlayerNameChange(e: React.FormEvent) {

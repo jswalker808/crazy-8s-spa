@@ -19,7 +19,9 @@ function App() {
 		ws.onmessage = (event) => {
 			const response = JSON.parse(event.data);
 			console.log(response);
-			setGameState(response);
+			if (response?.message !== "Internal server error") {
+				setGameState(response);
+			}
 		};
 		ws.onerror = (error) => {
 			console.error('WebSocket error:', error);

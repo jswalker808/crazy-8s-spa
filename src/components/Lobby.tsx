@@ -1,8 +1,12 @@
 import { Player } from "../models/models"
 
-export default function Lobby({ players }: { players: Player[] }) {
+export default function Lobby({ players, gameId }: { players: Player[], gameId: string }) {
 
     const playerListItems = players.map(player => <li key={ player.id }>{ player.name }</li>)
+    
+    const domain = window.location.hostname;
+    const port = window.location.port;        
+    const gameLink = `${domain}:${port}/${gameId}`; 
 
     return (
         <>
@@ -11,6 +15,7 @@ export default function Lobby({ players }: { players: Player[] }) {
             <ul>
                 { playerListItems }
             </ul>
+            <p>Game Link: <b><a href={gameLink}>{gameLink}</a></b></p>
         </>
     )
 }

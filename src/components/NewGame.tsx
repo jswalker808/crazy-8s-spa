@@ -5,7 +5,7 @@ import { GameState } from "../models/models";
 
 export default function NewGame({ gameState }: { gameState: GameState | null }) {
 
-    const webSocket = useContext(WebSocketContext)
+    const webSocket = useContext(WebSocketContext);
     const [playername, setPlayerName] = useState("");
     const navigate = useNavigate();
 

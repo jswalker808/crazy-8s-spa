@@ -1,4 +1,4 @@
-import { Page, test } from '@playwright/test';
+import { Page, expect, test } from '@playwright/test';
 
 test.describe('Game', () => {
 	let page1: Page;
@@ -36,7 +36,6 @@ test.describe('Game', () => {
 		const page1Players = page1.locator("ul");
 		await page1Players.locator(`li:has-text(\"${player1Name}\")`).isVisible();
 
-
 		// Join game from second page
 		await page2.goto(`./${gameId}`);
 		// Wait for websocket to connect to server
@@ -48,6 +47,12 @@ test.describe('Game', () => {
 		const page2Players = page2.locator("ul");
 		await page2Players.locator(`li:has-text(\"${player1Name}\")`).isVisible();
 		await page2Players.locator(`li:has-text(\"${player2Name}\")`).isVisible();
+
+		// Player 2 leave game
+		await page2.close();
+		const numPage1Players = await page1Players.locator("li");
+		await expect(numPage1Players).toHaveCount(1);
+		await page1Players.locator(`li:has-text(\"${player1Name}\")`).isVisible();
 	});
 })
 

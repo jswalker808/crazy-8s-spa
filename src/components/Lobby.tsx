@@ -6,7 +6,7 @@ export default function Lobby({ players, gameId }: { players: Player[], gameId: 
     
     const domain = window.location.hostname;
     const port = window.location.port;        
-    const gameLink = `${domain}:${port}/${gameId}`; 
+    const gameLink = `http://${domain}:${port}/${gameId}`; 
 
     return (
         <>

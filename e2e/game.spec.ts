@@ -6,6 +6,7 @@ test.describe('Game', () => {
 	const player1Name = 'player1';
 	const player2Name = 'player2';
 	let gameId: string | undefined;
+	const defaultTimeout = 1000;
 
 	test.beforeAll(async ({ browser }) => {
 		const context = await browser.newContext();
@@ -20,8 +21,7 @@ test.describe('Game', () => {
 	test('run game', async () => {
 		// Create game
 		await page1.goto('/');
-		// Wait for websocket to connect to server
-		await page1.waitForTimeout(1000);
+		await page1.waitForTimeout(defaultTimeout);
 		
 		await page1.locator("input").fill(player1Name);
 		await page1.locator("button").click();
@@ -36,21 +36,26 @@ test.describe('Game', () => {
 		const page1Players = page1.locator("ul");
 		await page1Players.locator(`li:has-text(\"${player1Name}\")`).isVisible();
 
+
 		// Join game from second page
 		await page2.goto(`./${gameId}`);
-		// Wait for websocket to connect to server
-		await page2.waitForTimeout(1000);
+		await page2.waitForTimeout(defaultTimeout);
 
 		await page2.locator("input").fill(player2Name);
 		await page2.locator("button").click();
+		await page2.waitForTimeout(defaultTimeout);
 
+		expect(await page1Players.locator(`li:has-text(\"${player1Name}\")`).isVisible()).toBeTruthy();
+		expect(await page1Players.locator(`li:has-text(\"${player2Name}\")`).isVisible()).toBeTruthy();
 		const page2Players = page2.locator("ul");
-		await page2Players.locator(`li:has-text(\"${player1Name}\")`).isVisible();
-		await page2Players.locator(`li:has-text(\"${player2Name}\")`).isVisible();
+		expect(await page2Players.locator(`li:has-text(\"${player1Name}\")`).isVisible()).toBeTruthy();
+		expect(await page2Players.locator(`li:has-text(\"${player2Name}\")`).isVisible()).toBeTruthy();
+		
 
 		// Player 2 leave game
 		await page2.close();
 		const numPage1Players = await page1Players.locator("li");
+		await page1.waitForTimeout(defaultTimeout);
 		await expect(numPage1Players).toHaveCount(1);
 		await page1Players.locator(`li:has-text(\"${player1Name}\")`).isVisible();
 	});
